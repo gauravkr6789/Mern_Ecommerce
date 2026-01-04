@@ -125,7 +125,7 @@ export const loginUser = async (req, res) => {
         return res.status(200).json({
             message: "Login successful",
             success: true,
-            status:401,
+            status:200,
             token
         });
 
@@ -134,7 +134,7 @@ export const loginUser = async (req, res) => {
         return res.status(500).json({
             message: "Server error",
             success: false,
-            status:401,
+            status:500,
             token: null
         });
     }
