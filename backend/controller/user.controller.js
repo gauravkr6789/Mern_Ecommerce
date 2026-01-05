@@ -1,6 +1,6 @@
 import User from "../model/UserSchema.model.js";
 import bcrypt from 'bcrypt'
-import generateToken from "../Token/Token.js";
+import generateToken from '../utils/Token/token.js'
 export const registerUser=async (req,res)=>{
     try{
         const {username,email,password,phone,confirmPassword}=req.body
@@ -63,20 +63,14 @@ export const registerUser=async (req,res)=>{
                 Token:token
             })
         }
-        else{
-            return res.status(500).json({
-                message:"internal server error !!!",
-                status:500,
-                success:false
-            })
-        }
     }
     catch(err){
-        console.error("Register user  error:", err.message);
+       
         return res.status(500).json({
             message: "Server error",
             success: false,
-            status:500
+            status:500,
+            error:err.message
         });
      
     }

@@ -9,6 +9,6 @@ app.use(express.json())
 app.use('/api/auth',authRouter)
 //database connection
 connectDb()
-app.listen(()=>{
+app.listen(process.env.PORT,()=>{
     console.log(`server running on port :${process.env.PORT}`)
 })
