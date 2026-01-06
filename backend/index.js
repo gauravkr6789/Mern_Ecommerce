@@ -1,8 +1,9 @@
 import express from 'express'
 import dotenv from 'dotenv'
+dotenv.config()
 import connectDb from './Database/dbConfig.js'
 import authRouter from './router/userrouter.js'
-dotenv.config()
+console.log("PORT :",process.env.PORT)
 const app=express()
 app.use(express.json())
 //router

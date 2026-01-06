@@ -22,7 +22,7 @@ export const sendOtp = async (req, res) => {
     const newOtp = new OtpModel({
       user: user._id,
       otp: hashOtp,
-      expiresAt: new Date(Date.now() + 5 * 60 * 1000), 
+      expiresAt: new Date(Date.now() + 1 * 60 * 1000), 
       attempts: 0
     });
     await newOtp.save();
@@ -30,7 +30,7 @@ export const sendOtp = async (req, res) => {
     await sendEmail({
       to: email,
       subject: "Your OTP Code",
-      html: `<p>Your OTP is: <b>${otp}</b>. It expires in 5 minutes.</p>`
+      html: `<p>Your OTP is: <b>${otp}</b>. It expires in 1 minutes.</p>`
     });
 
     return res.status(200).json({
@@ -109,14 +109,14 @@ export const authenticate = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(' ')[1];
   if (!token) {
-    return res.status(401).json({ message: "No token provided", status: false });
+    return res.status(403).json({ message: "No token provided", status: false });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    req.user = decoded;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    req.user = decodedToken;
     next();
   } catch (err) {
-    return res.status(403).json({ message: "Invalid or expired token", status: false });
+    return res.status(401).json({ message: "unauthorized", status: false });
   }
 };
