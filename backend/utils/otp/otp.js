@@ -3,7 +3,7 @@ import User from '../../model/UserSchema.model.js';
 import OtpModel from '../../model/OtpSchema.model.js';
 import { generateOtp } from './generateOtp.js'
 import { sendEmail } from '../../services/email.services.js'
-import generateToken from '../Token/token.js'
+
 import jwt from 'jsonwebtoken'
 
 export const sendOtp = async (req, res) => {
@@ -22,7 +22,7 @@ export const sendOtp = async (req, res) => {
     const newOtp = new OtpModel({
       user: user._id,
       otp: hashOtp,
-      expiresAt: new Date(Date.now() + 1 * 60 * 1000), 
+      expiresAt: Date.now() + 5 * 60 * 1000,
       attempts: 0
     });
     await newOtp.save();
@@ -61,10 +61,11 @@ export const otpVerification = async (req, res) => {
     }
 
 
-    if (record.expiresAt < new Date()) {
+    if (record.expiresAt < Date.now()) {
       await OtpModel.deleteOne({ user: user._id });
       return res.status(400).json({ message: "OTP has expired", status: false });
     }
+
 
     const isValidOtp = await bcrypt.compare(otp, record.otp);
     if (!isValidOtp) {
@@ -85,16 +86,16 @@ export const otpVerification = async (req, res) => {
       });
     }
 
+    await user.save();
     await OtpModel.deleteOne({ user: user._id });
-    await User.findByIdAndUpdate(user._id, { isVerified: true });
-
-    const token = generateToken({ id: user._id, email: user.email }, '1h');
-
     return res.status(200).json({
       message: "OTP verified",
       status: true,
-      token
+      resetToken: hashresetToken
+
     });
+
+
 
   } catch (err) {
     return res.status(500).json({

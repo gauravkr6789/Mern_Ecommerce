@@ -22,9 +22,13 @@ const UserSchema=new mongoose.Schema({
     isVerified:{
         type:Boolean,
         default:false
-    }
-    
-
+    },
+    passwordResetToken:{
+      type:String
+    } ,
+    passwordResetExpires:{
+      type:Date
+    } 
 },{timestamps:true})
 
 const User=mongoose.model('user',UserSchema)

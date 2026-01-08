@@ -16,11 +16,6 @@ const transporter = nodemailer.createTransport({
 await transporter.verify();
 console.log("SMTP Connected Successfully");
 
-
-
-
-
-
 export const sendEmail = async ({ to, subject, html }) => {
   return transporter.sendMail({
     from: process.env.EMAIL_USER,
